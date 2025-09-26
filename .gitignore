@@ -1,0 +1,43 @@
+# Docker
+*.log
+.docker/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+env/
+venv/
+ENV/
+.env
+
+# Testing
+.coverage
+.pytest_cache/
+htmlcov/
+.tox/
+
+# Build
+build/
+dist/
+*.egg-info/
+
+# Temporary files
+*.tmp
+*.bak
+*.cache
+tmp/
+temp/

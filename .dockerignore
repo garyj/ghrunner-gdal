@@ -1,0 +1,40 @@
+# Git
+.git
+.gitignore
+.github
+
+# Documentation
+README.md
+LICENSE
+CHANGELOG.md
+docs/
+
+# Development
+docker-compose.yml
+docker-compose.*.yml
+Makefile
+
+# IDE
+.vscode/
+.idea/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Testing
+test_app/
+tests/
+*.test.py
+
+# Build artifacts
+build/
+dist/
+*.egg-info/
+
+# Temporary files
+*.log
+*.tmp
+*.bak
+tmp/
+temp/

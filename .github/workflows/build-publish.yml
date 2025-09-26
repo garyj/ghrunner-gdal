@@ -55,18 +55,36 @@ jobs:
             type=raw,value=latest,enable={{is_default_branch}}
             type=sha,prefix={{branch}}-
 
-      - name: Build and push Docker image
+      - name: Build test image (single platform)
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          push: false
+          tags: test-image:latest
+          labels: ${{ steps.meta.outputs.labels }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+          load: true
+
+      - name: Test GDAL installation
+        run: |
+          # Test that GDAL is properly installed and working
+          docker run --rm test-image:latest bash -c "gdalinfo --version && ogrinfo --version"
+
+          # Verify GDAL_DATA is set correctly
+          docker run --rm test-image:latest bash -c "echo 'GDAL_DATA is:' \$GDAL_DATA && test -d \$GDAL_DATA && echo 'GDAL_DATA directory exists'"
+
+          # Test that runner user can execute GDAL commands
+          docker run --rm test-image:latest bash -c "whoami && gdalinfo --version"
+
+      - name: Build and push multi-platform image
+        if: github.event_name != 'pull_request'
         uses: docker/build-push-action@v6
         with:
           context: .
           platforms: linux/amd64,linux/arm64
-          push: ${{ github.event_name != 'pull_request' }}
+          push: true
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
-
-      - name: Test GDAL installation
-        run: |
-          docker run --rm ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:pr-${{ github.event.pull_request.number }} \
-            bash -c "gdalinfo --version && python3 -c 'from osgeo import gdal; print(gdal.__version__)'"
